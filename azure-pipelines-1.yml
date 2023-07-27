@@ -1,0 +1,65 @@
+# Pipeline to validate and deploy ARM templates
+
+trigger:
+  branches:
+    include:
+    - master
+  paths:
+    exclude:
+    - README.md
+
+variables:
+    # Deployment location
+    location: 'East US '
+    # Base URI for ARM templates
+    templateBaseUrl: 'https://raw.githubusercontent.com/andrewmatveychuk/azure.policy/master'
+
+stages:
+
+- stage: Validate
+  displayName: Validate
+
+  jobs:
+    - job: ValidateJob
+      displayName: Validate the ARM templates
+      pool:
+        vmImage: 'linux-latest'
+
+      steps:
+        - task: AzureResourceManagerTemplateDeployment@3
+          displayName: Validate main template
+          inputs:
+            deploymentScope: 'Subscription'
+            ConnectedServiceName: $(subscriptionName)
+            subscriptionName: $(subscriptionId)
+            location: '$(location)'
+            templateLocation: 'URL of the file'
+            csmFileLink: '$(templateBaseUrl)/main-template/template.json'
+            csmParametersFileLink: '$(templateBaseUrl)/main-template/parameters.json'
+            deploymentMode: 'Validation'
+
+- stage: DeployToTestEnvironment
+  displayName: Deploy to test
+  dependsOn: Validate
+
+  jobs:
+  - deployment: DeploymentJob
+    displayName: Deploy ARM templates
+    pool:
+      vmImage: 'linux'
+    environment: 'Test'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+            - task: AzureResourceManagerTemplateDeployment@3
+              displayName: Deploy policies
+              inputs:
+                deploymentScope: 'Subscription'
+                ConnectedServiceName: $(subscriptionName)
+                subscriptionName: $(subscriptionId)
+                location: '$(location)'
+                templateLocation: 'URL of the file'
+                csmFileLink: '$(templateBaseUrl)/main-template/template.json'
+                csmParametersFileLink: '$(templateBaseUrl)/main-template/parameters.json'
+                deploymentMode: 'Incremental'
