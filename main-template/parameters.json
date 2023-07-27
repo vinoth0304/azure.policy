@@ -1,0 +1,60 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "resourceName": {
+            "value": "demo_aks"
+        },
+        "location": {
+            "value": "eastus"
+        },
+        "dnsPrefix": {
+            "value": "demoaks-dns"
+        },
+        "kubernetesVersion": {
+            "value": "1.25.6"
+        },
+        "networkPlugin": {
+            "value": "kubenet"
+        },
+        "enableRBAC": {
+            "value": true
+        },
+        "nodeResourceGroup": {
+            "value": "MC_nook-devops-resourcegroup_demo_aks_eastus"
+        },
+        "upgradeChannel": {
+            "value": "patch"
+        },
+        "adminGroupObjectIDs": {
+            "value": []
+        },
+        "disableLocalAccounts": {
+            "value": true
+        },
+        "azureRbac": {
+            "value": true
+        },
+        "enablePrivateCluster": {
+            "value": false
+        },
+        "enableAzurePolicy": {
+            "value": false
+        },
+        "enableSecretStoreCSIDriver": {
+            "value": false
+        },
+        "vmssNodePool": {
+            "value": true
+        },
+        "workspaceName": {
+            "value": "DefaultWorkspace-81e55147-d10f-46e8-8f4b-1aa959eb783d-EUS"
+        },
+        "omsWorkspaceId": {
+            "value": "/subscriptions/81e55147-d10f-46e8-8f4b-1aa959eb783d/resourceGroups/nook-devops-resourcegroup/providers/Microsoft.OperationalInsights/workspaces/DefaultWorkspace-81e55147-d10f-46e8-8f4b-1aa959eb783d-EUS"
+        },
+        "workspaceRegion": {
+            "value": "eastus"
+        }
+    }
+}
